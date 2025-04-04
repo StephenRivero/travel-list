@@ -7,7 +7,7 @@ const initialItems = [
 
 export default function App() {
   const [item, setItem] = useState([]);
-  // console.log({item})
+  console.log({item})
 
   const handleAddItem = (item) => {
     setItem(items => [...items, item])
@@ -33,7 +33,7 @@ export default function App() {
       <Logo />
       <Form onAddItem={handleAddItem} />
       <PackingList item={item} onDeleteItem={handleDeleteItem} onToggleItem={handleToggleItem}/>
-      <Stats />
+      <Stats item={item} />
     </div>
   )
 }
@@ -107,10 +107,21 @@ function Item({ item, onDeleteItem, onToggleItem }) {
   )
 }
 
-function Stats() {
+function Stats({ item }) {
+  const numItems = item.length
+  const packedItems = item.filter(items => items.packed).length
+  const packedPercentage = Math.round((packedItems / numItems) * 100)
+
   return (
     <footer className="stats">
-      <em>You have X items on your list, and you already packed X (X%)</em>
+      <em>
+        {item.length === 0 && "Start Adding some items to your packing list 🚀"}
+        {(item.length > 0 && packedPercentage !== 100) &&
+          `You have ${numItems} items on your list, and you already packed ${packedItems} (${packedPercentage}%)`
+        }
+        {packedPercentage === 100 && `You got everything! Ready to go ✈️` }
+       
+      </em>
     </footer>
   )
 }
